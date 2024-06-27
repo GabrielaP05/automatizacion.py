@@ -1,0 +1,23 @@
+import pandas as pd
+import requests
+import argparse
+
+def main(url):
+    # Descargar datos desde la url
+    data = requests.get(url).content
+
+# Convertir datos 
+    df = pd.read_csv(io.StringIO(data.decode('utf-8')))
+
+    # Categorizar  grupos
+    df['group'] = df.groupby(df.columns.tolist()).ngroup()
+
+    # Exportar csv 
+    df.to_csv('result.csv', index=False)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('url', help='URL to download data from')
+    args = parser.parse_args()
+
+    main(args.url)
